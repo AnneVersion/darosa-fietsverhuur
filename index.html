@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darosa Fietsverhuur - Elektrische Bromfietsen Huren in Arnhem</title>
+    <meta name="description" content="Huur een Fuell elektrische bromfiets in Arnhem. Duurzame mobiliteit door Darosa Beheer B.V. Vanaf €25 per dag.">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --blauw: #0066FF;
+            --blauw-donker: #0052CC;
+            --blauw-licht: #E6F0FF;
+            --grijs-50: #F8FAFC;
+            --grijs-100: #F1F5F9;
+            --grijs-200: #E2E8F0;
+            --grijs-300: #CBD5E1;
+            --grijs-500: #64748B;
+            --grijs-700: #334155;
+            --grijs-900: #0F172A;
+            --groen: #10B981;
+            --oranje: #F59E0B;
+            --rood: #EF4444;
+            --wit: #FFFFFF;
+            --schaduw: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --schaduw-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --radius: 12px;
+        }
+
+        body {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            color: var(--grijs-900);
+            background: var(--wit);
+            line-height: 1.6;
+        }
+
+        /* ========== NAV ========== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--grijs-200);
+            z-index: 1000;
+            padding: 0 20px;
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+        }
+        .nav-logo {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--blauw);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-logo .material-icons { font-size: 28px; }
+        .nav-links { display: flex; gap: 24px; list-style: none; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--grijs-700);
+            font-size: 13px;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--blauw); }
+        .nav-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--grijs-700);
+        }
+
+        /* ========== HERO ========== */
+        .hero {
+            padding: 120px 20px 80px;
+            background: linear-gradient(135deg, var(--blauw-licht) 0%, var(--wit) 50%, #F0F7FF 100%);
+            text-align: center;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: var(--blauw);
+            color: var(--wit);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+        .hero h1 {
+            font-size: clamp(28px, 5vw, 48px);
+            color: var(--grijs-900);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        .hero h1 span { color: var(--blauw); }
+        .hero p {
+            font-size: 16px;
+            color: var(--grijs-500);
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .hero-stat {
+            text-align: center;
+        }
+        .hero-stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--blauw);
+        }
+        .hero-stat-label {
+            font-size: 12px;
+            color: var(--grijs-500);
+            margin-top: 4px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--blauw);
+            color: var(--wit);
+        }
+        .btn-primary:hover {
+            background: var(--blauw-donker);
+            transform: translateY(-1px);
+            box-shadow: var(--schaduw-lg);
+        }
+        .btn-outline {
+            background: var(--wit);
+            color: var(--blauw);
+            border: 2px solid var(--blauw);
+        }
+        .btn-outline:hover {
+            background: var(--blauw-licht);
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ========== SECTIONS ========== */
+        section { padding: 80px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-title {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .section-title h2 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            color: var(--grijs-900);
+        }
+        .section-title p {
+            color: var(--grijs-500);
+            font-size: 14px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ========== FIETSEN ========== */
+        #fietsen { background: var(--grijs-50); }
+        .fietsen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .fiets-card {
+            background: var(--wit);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--schaduw);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .fiets-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--schaduw-lg);
+        }
+        .fiets-img {
+            height: 200px;
+            background: linear-gradient(135deg, #0044AA 0%, #0066FF 50%, #3388FF 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .fiets-img .material-icons {
+            font-size: 64px;
+            color: rgba(255,255,255,0.3);
+        }
+        .fiets-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--wit);
+        }
+        .badge-beschikbaar { background: var(--groen); }
+        .badge-verhuurd { background: var(--oranje); }
+        .badge-onderhoud { background: var(--rood); }
+        .fiets-info { padding: 20px; }
+        .fiets-info h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .fiets-specs {
+            display: flex;
+            gap: 16px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+        .fiets-spec {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--grijs-500);
+        }
+        .fiets-spec .material-icons { font-size: 16px; color: var(--blauw); }
+        .fiets-prijs {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--blauw);
+            margin: 12px 0;
+        }
+        .fiets-prijs span {
+            font-size: 13px;
+            color: var(--grijs-500);
+            font-weight: normal;
+        }
+        .fiets-card .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* ========== HOE HET WERKT ========== */
+        .stappen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 32px;
+        }
+        .stap {
+            text-align: center;
+            padding: 32px 20px;
+        }
+        .stap-nummer {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--blauw-licht);
+            color: var(--blauw);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto 16px;
+        }
+        .stap h3 { font-size: 16px; margin-bottom: 8px; }
+        .stap p { font-size: 13px; color: var(--grijs-500); }
+
+        /* ========== TARIEVEN ========== */
+        #tarieven { background: var(--grijs-50); }
+        .tarieven-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .tarief-card {
+            background: var(--wit);
+            border-radius: var(--radius);
+            padding: 32px;
+            text-align: center;
+            box-shadow: var(--schaduw);
+            position: relative;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        .tarief-card:hover { border-color: var(--blauw); }
+        .tarief-card.populair { border-color: var(--blauw); }
+        .tarief-populair {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--blauw);
+            color: var(--wit);
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .tarief-card h3 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: var(--grijs-700);
+        }
+        .tarief-prijs {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--grijs-900);
+        }
+        .tarief-prijs span {
+            font-size: 14px;
+            color: var(--grijs-500);
+            font-weight: normal;
+        }
+        .tarief-korting {
+            display: inline-block;
+            background: #ECFDF5;
+            color: var(--groen);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 8px 0 16px;
+        }
+        .tarief-features {
+            list-style: none;
+            margin: 16px 0;
+            text-align: left;
+        }
+        .tarief-features li {
+            padding: 8px 0;
+            font-size: 13px;
+            color: var(--grijs-700);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tarief-features .material-icons {
+            font-size: 18px;
+            color: var(--groen);
+        }
+
+        /* ========== OVER ONS ========== */
+        .over-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+        .over-tekst h2 { font-size: 28px; margin-bottom: 16px; }
+        .over-tekst p { color: var(--grijs-500); font-size: 14px; margin-bottom: 16px; }
+        .over-kaart {
+            background: var(--grijs-100);
+            border-radius: var(--radius);
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--grijs-500);
+            font-size: 14px;
+        }
+        .over-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+        .over-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--grijs-700);
+        }
+        .over-detail .material-icons { color: var(--blauw); font-size: 20px; }
+
+        /* ========== FAQ ========== */
+        #faq { background: var(--grijs-50); }
+        .faq-list { max-width: 800px; margin: 0 auto; }
+        .faq-item {
+            background: var(--wit);
+            border-radius: var(--radius);
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: var(--schaduw);
+        }
+        .faq-vraag {
+            padding: 20px 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .faq-vraag:hover { color: var(--blauw); }
+        .faq-vraag .material-icons { transition: transform 0.3s; color: var(--grijs-500); }
+        .faq-item.open .faq-vraag .material-icons { transform: rotate(180deg); }
+        .faq-antwoord {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .faq-antwoord-inner {
+            padding: 0 24px 20px;
+            font-size: 13px;
+            color: var(--grijs-500);
+            line-height: 1.8;
+        }
+
+        /* ========== CONTACT ========== */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .contact-info-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .contact-info-item .material-icons {
+            color: var(--blauw);
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .contact-info-item h4 { font-size: 14px; margin-bottom: 4px; }
+        .contact-info-item p { font-size: 13px; color: var(--grijs-500); }
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--grijs-200);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--blauw);
+        }
+        .contact-form textarea { height: 120px; resize: vertical; }
+
+        /* ========== FOOTER ========== */
+        footer {
+            background: var(--grijs-900);
+            color: var(--grijs-300);
+            padding: 48px 20px 24px;
+        }
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 48px;
+        }
+        .footer-brand h3 { color: var(--wit); font-size: 18px; margin-bottom: 12px; }
+        .footer-brand p { font-size: 13px; line-height: 1.8; }
+        footer h4 { color: var(--wit); font-size: 14px; margin-bottom: 16px; }
+        footer ul { list-style: none; }
+        footer li { margin-bottom: 8px; }
+        footer a { color: var(--grijs-300); text-decoration: none; font-size: 13px; }
+        footer a:hover { color: var(--wit); }
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 32px auto 0;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* ========== MODAL ========== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--wit);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid var(--grijs-200);
+        }
+        .modal-header h2 { font-size: 18px; }
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--grijs-500);
+            font-size: 24px;
+        }
+        .modal-body { padding: 24px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: var(--grijs-700);
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--grijs-200);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--blauw);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .prijs-overzicht {
+            background: var(--blauw-licht);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .prijs-regel {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 4px 0;
+        }
+        .prijs-regel.totaal {
+            font-weight: bold;
+            font-size: 16px;
+            border-top: 1px solid var(--grijs-200);
+            padding-top: 8px;
+            margin-top: 8px;
+            color: var(--blauw);
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin: 16px 0;
+        }
+        .checkbox-group input { margin-top: 3px; }
+        .checkbox-group label { font-size: 12px; color: var(--grijs-500); }
+        .bevestiging {
+            text-align: center;
+            padding: 32px 0;
+        }
+        .bevestiging .material-icons {
+            font-size: 64px;
+            color: var(--groen);
+            margin-bottom: 16px;
+        }
+        .bevestiging h3 { margin-bottom: 8px; }
+        .reservering-nr {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--blauw);
+            margin: 12px 0;
+            font-family: monospace;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .nav-menu-btn { display: block; }
+            .nav-links.open {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: var(--wit);
+                padding: 20px;
+                box-shadow: var(--schaduw-lg);
+            }
+            .over-content,
+            .contact-grid { grid-template-columns: 1fr; }
+            .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+            .hero-stats { gap: 24px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-inner">
+        <a href="#" class="nav-logo">
+            <span class="material-icons">electric_moped</span>
+            Darosa Fietsverhuur
+        </a>
+        <button class="nav-menu-btn" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+            <span class="material-icons">menu</span>
+        </button>
+        <ul class="nav-links">
+            <li><a href="#fietsen">Onze Fietsen</a></li>
+            <li><a href="#hoe-het-werkt">Hoe Het Werkt</a></li>
+            <li><a href="#tarieven">Tarieven</a></li>
+            <li><a href="#over-ons">Over Ons</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-badge">DAROSA BEHEER B.V.</div>
+        <h1>Elektrische Bromfietsen<br><span>Huren in Arnhem</span></h1>
+        <p>Ontdek Arnhem op een duurzame manier met onze Fuell Flluid elektrische bromfietsen. Stil, snel en milieuvriendelijk door de stad.</p>
+        <div class="hero-buttons">
+            <button class="btn btn-primary" onclick="openModal()">
+                <span class="material-icons">event</span>
+                Reserveer Nu
+            </button>
+            <a href="#fietsen" class="btn btn-outline">
+                <span class="material-icons">visibility</span>
+                Bekijk Aanbod
+            </a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-value">5</div>
+                <div class="hero-stat-label">Fietsen beschikbaar</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">150 km</div>
+                <div class="hero-stat-label">Bereik per lading</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">45 km/u</div>
+                <div class="hero-stat-label">Maximale snelheid</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">&euro;25</div>
+                <div class="hero-stat-label">Vanaf per dag</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ONZE FIETSEN -->
+<section id="fietsen">
+    <div class="container">
+        <div class="section-title">
+            <h2>Onze Elektrische Bromfietsen</h2>
+            <p>Vijf Fuell Flluid bromfietsen beschikbaar voor verhuur. Premium kwaliteit, elektrisch aangedreven.</p>
+        </div>
+        <div class="fietsen-grid" id="fietsen-grid">
+            <!-- Wordt geladen via JavaScript -->
+        </div>
+    </div>
+</section>
+
+<!-- HOE HET WERKT -->
+<section id="hoe-het-werkt">
+    <div class="container">
+        <div class="section-title">
+            <h2>Hoe Het Werkt</h2>
+            <p>In vier eenvoudige stappen op weg met een elektrische bromfiets.</p>
+        </div>
+        <div class="stappen-grid">
+            <div class="stap">
+                <div class="stap-nummer">1</div>
+                <h3>Kies</h3>
+                <p>Bekijk ons aanbod en kies de bromfiets en periode die bij je past.</p>
+            </div>
+            <div class="stap">
+                <div class="stap-nummer">2</div>
+                <h3>Reserveer</h3>
+                <p>Vul je gegevens in en ontvang direct een bevestiging met reserveringsnummer.</p>
+            </div>
+            <div class="stap">
+                <div class="stap-nummer">3</div>
+                <h3>Ophalen</h3>
+                <p>Haal je bromfiets op bij ons aan de Rosendaalsestraat 129 in Arnhem.</p>
+            </div>
+            <div class="stap">
+                <div class="stap-nummer">4</div>
+                <h3>Rijden</h3>
+                <p>Geniet van elektrisch rijden door Arnhem en omgeving. Helm en slot zijn inbegrepen.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TARIEVEN -->
+<section id="tarieven">
+    <div class="container">
+        <div class="section-title">
+            <h2>Tarieven</h2>
+            <p>Transparante prijzen zonder verborgen kosten. Helm, slot, oplader en verzekering inbegrepen.</p>
+        </div>
+        <div class="tarieven-grid">
+            <div class="tarief-card">
+                <h3>Per Dag</h3>
+                <div class="tarief-prijs">&euro;25 <span>/ dag</span></div>
+                <div class="tarief-korting" style="visibility:hidden">-</div>
+                <ul class="tarief-features">
+                    <li><span class="material-icons">check_circle</span> Helm inbegrepen</li>
+                    <li><span class="material-icons">check_circle</span> Kettingslot inbegrepen</li>
+                    <li><span class="material-icons">check_circle</span> Oplader meegeleverd</li>
+                    <li><span class="material-icons">check_circle</span> Verzekering inbegrepen</li>
+                    <li><span class="material-icons">check_circle</span> Borg: &euro;250 (retour)</li>
+                </ul>
+                <button class="btn btn-outline" onclick="openModal()" style="width:100%;justify-content:center;">Reserveer</button>
+            </div>
+            <div class="tarief-card populair">
+                <div class="tarief-populair">MEEST GEKOZEN</div>
+                <h3>Per Week</h3>
+                <div class="tarief-prijs">&euro;150 <span>/ week</span></div>
+                <div class="tarief-korting">Bespaar 14%</div>
+                <ul class="tarief-features">
+                    <li><span class="material-icons">check_circle</span> Helm inbegrepen</li>
+                    <li><span class="material-icons">check_circle</span> Kettingslot inbegrepen</li>
+                    <li><span class="material-icons">check_circle</span> Oplader meegeleverd</li>
+                    <li><span class="material-icons">check_circle</span> Verzekering inbegrepen</li>
+                    <li><span class="material-icons">check_circle</span> Borg: &euro;250 (retour)</li>
+                </ul>
+                <button class="btn btn-primary" onclick="openModal()" style="width:100%;justify-content:center;">Reserveer</button>
+            </div>
+            <div class="tarief-card">
+                <h3>Per Maand</h3>
+                <div class="tarief-prijs">&euro;450 <span>/ maand</span></div>
+                <div class="tarief-korting">Bespaar 40%</div>
+                <ul class="tarief-features">
+                    <li><span class="material-icons">check_circle</span> Helm inbegrepen</li>
+                    <li><span class="material-icons">check_circle</span> Kettingslot inbegrepen</li>
+                    <li><span class="material-icons">check_circle</span> Oplader meegeleverd</li>
+                    <li><span class="material-icons">check_circle</span> Verzekering inbegrepen</li>
+                    <li><span class="material-icons">check_circle</span> Borg: &euro;250 (retour)</li>
+                </ul>
+                <button class="btn btn-outline" onclick="openModal()" style="width:100%;justify-content:center;">Reserveer</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OVER ONS -->
+<section id="over-ons">
+    <div class="container">
+        <div class="over-content">
+            <div class="over-tekst">
+                <h2>Over Darosa Beheer B.V.</h2>
+                <p>Darosa Beheer B.V. is gevestigd in Arnhem en zet zich in voor duurzame stedelijke mobiliteit. Met onze vloot van vijf Fuell Flluid elektrische bromfietsen bieden wij een milieuvriendelijk alternatief voor het dagelijks verkeer.</p>
+                <p>Onze bromfietsen zijn stil, snel en hebben een bereik van 150 kilometer per lading. Ideaal voor woon-werkverkeer, stadsbezichtigingen of gewoon een dagje uit in de regio Arnhem.</p>
+                <div class="over-details">
+                    <div class="over-detail">
+                        <span class="material-icons">location_on</span>
+                        Arnhem
+                    </div>
+                    <div class="over-detail">
+                        <span class="material-icons">eco</span>
+                        100% Elektrisch
+                    </div>
+                    <div class="over-detail">
+                        <span class="material-icons">verified</span>
+                        Verzekerd
+                    </div>
+                    <div class="over-detail">
+                        <span class="material-icons">support_agent</span>
+                        Persoonlijke service
+                    </div>
+                </div>
+            </div>
+            <div class="over-kaart">
+                <div style="text-align:center">
+                    <span class="material-icons" style="font-size:48px;color:var(--blauw);opacity:0.5">map</span>
+                    <br>Rosendaalsestraat 129<br>6824 CD Arnhem
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="container">
+        <div class="section-title">
+            <h2>Veelgestelde Vragen</h2>
+            <p>Alles wat je wilt weten over het huren van onze elektrische bromfietsen.</p>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-vraag" onclick="toggleFaq(this)">
+                    Heb ik een rijbewijs nodig?
+                    <span class="material-icons">expand_more</span>
+                </div>
+                <div class="faq-antwoord">
+                    <div class="faq-antwoord-inner">
+                        Ja, voor onze elektrische bromfietsen heb je minimaal een AM-rijbewijs (bromfietsrijbewijs) nodig. Een B-rijbewijs (autorijbewijs) is ook geldig. Je moet minimaal 16 jaar oud zijn.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-vraag" onclick="toggleFaq(this)">
+                    Is de bromfiets verzekerd?
+                    <span class="material-icons">expand_more</span>
+                </div>
+                <div class="faq-antwoord">
+                    <div class="faq-antwoord-inner">
+                        Ja, alle onze bromfietsen zijn volledig WA-verzekerd. De verzekering is inbegrepen in de huurprijs. Bij schade door eigen schuld geldt een eigen risico van maximaal &euro;250 (de borgsom).
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-vraag" onclick="toggleFaq(this)">
+                    Wat gebeurt er bij schade?
+                    <span class="material-icons">expand_more</span>
+                </div>
+                <div class="faq-antwoord">
+                    <div class="faq-antwoord-inner">
+                        Bij schade door eigen schuld wordt de reparatie verrekend met de borg van &euro;250. Bij schade door derden wordt dit via de verzekering afgehandeld. Meld schade altijd direct bij ons.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-vraag" onclick="toggleFaq(this)">
+                    Hoe lang duurt het opladen?
+                    <span class="material-icons">expand_more</span>
+                </div>
+                <div class="faq-antwoord">
+                    <div class="faq-antwoord-inner">
+                        De Fuell Flluid heeft een bereik van circa 150 km per volle lading. Het volledig opladen duurt ongeveer 3-4 uur via een gewoon stopcontact. De oplader wordt meegeleverd bij de huur.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-vraag" onclick="toggleFaq(this)">
+                    Kan ik de bromfiets eerder inleveren?
+                    <span class="material-icons">expand_more</span>
+                </div>
+                <div class="faq-antwoord">
+                    <div class="faq-antwoord-inner">
+                        Ja, je kunt de bromfiets eerder inleveren. Het huurbedrag wordt echter niet met terugwerkende kracht aangepast. Bij langere huurperiodes (week/maand) raden we aan goed te plannen.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-vraag" onclick="toggleFaq(this)">
+                    Wat krijg ik mee bij de huur?
+                    <span class="material-icons">expand_more</span>
+                </div>
+                <div class="faq-antwoord">
+                    <div class="faq-antwoord-inner">
+                        Bij elke huur ontvang je: de Fuell Flluid bromfiets, een helm (diverse maten beschikbaar), een ART-goedgekeurd kettingslot, de oplader en een korte instructie over de bediening.
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-vraag" onclick="toggleFaq(this)">
+                    Hoe werkt de borgsom?
+                    <span class="material-icons">expand_more</span>
+                </div>
+                <div class="faq-antwoord">
+                    <div class="faq-antwoord-inner">
+                        Bij ophalen betaal je een borg van &euro;250. Deze ontvang je volledig terug bij inlevering van de bromfiets in goede staat. De borg kan contant of per pin betaald worden.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+    <div class="container">
+        <div class="section-title">
+            <h2>Contact</h2>
+            <p>Vragen? Neem gerust contact met ons op.</p>
+        </div>
+        <div class="contact-grid">
+            <div>
+                <div class="contact-info-item">
+                    <span class="material-icons">location_on</span>
+                    <div>
+                        <h4>Adres</h4>
+                        <p>Rosendaalsestraat 129<br>6824 CD Arnhem</p>
+                    </div>
+                </div>
+                <div class="contact-info-item">
+                    <span class="material-icons">email</span>
+                    <div>
+                        <h4>E-mail</h4>
+                        <p>info@darosa-fietsverhuur.nl</p>
+                    </div>
+                </div>
+                <div class="contact-info-item">
+                    <span class="material-icons">phone</span>
+                    <div>
+                        <h4>Telefoon</h4>
+                        <p>026 - XXX XXXX</p>
+                    </div>
+                </div>
+                <div class="contact-info-item">
+                    <span class="material-icons">schedule</span>
+                    <div>
+                        <h4>Openingstijden</h4>
+                        <p>Ma - Za: 09:00 - 18:00<br>Zo: Op afspraak</p>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form">
+                <input type="text" placeholder="Uw naam">
+                <input type="email" placeholder="Uw e-mailadres">
+                <input type="tel" placeholder="Uw telefoonnummer">
+                <textarea placeholder="Uw bericht"></textarea>
+                <button class="btn btn-primary" style="width:100%;justify-content:center;">
+                    <span class="material-icons">send</span>
+                    Verstuur Bericht
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <h3>Darosa Fietsverhuur</h3>
+            <p>Darosa Beheer B.V. - Duurzame mobiliteit in Arnhem. Huur een Fuell Flluid elektrische bromfiets en rijd stil, snel en milieuvriendelijk door de stad.</p>
+        </div>
+        <div>
+            <h4>Navigatie</h4>
+            <ul>
+                <li><a href="#fietsen">Onze Fietsen</a></li>
+                <li><a href="#tarieven">Tarieven</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Informatie</h4>
+            <ul>
+                <li><a href="#">Algemene Voorwaarden</a></li>
+                <li><a href="#">Privacybeleid</a></li>
+                <li><a href="#">KvK: [nummer]</a></li>
+                <li><a href="#">BTW: [nummer]</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2026 Darosa Beheer B.V. Alle rechten voorbehouden.
+    </div>
+</footer>
+
+<!-- RESERVERING MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modal-title">Reservering Maken</h2>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <!-- Stap 1: Fiets & Datum -->
+            <div id="stap-1">
+                <div class="form-group">
+                    <label>Kies een bromfiets</label>
+                    <select id="fiets-select">
+                        <option value="">Selecteer een bromfiets...</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ophalen op</label>
+                        <input type="date" id="ophaal-datum">
+                    </div>
+                    <div class="form-group">
+                        <label>Inleveren op</label>
+                        <input type="date" id="inlever-datum">
+                    </div>
+                </div>
+                <div class="prijs-overzicht" id="prijs-overzicht" style="display:none">
+                    <div class="prijs-regel">
+                        <span>Aantal dagen</span>
+                        <span id="prijs-dagen">-</span>
+                    </div>
+                    <div class="prijs-regel">
+                        <span>Dagprijs</span>
+                        <span id="prijs-dag">-</span>
+                    </div>
+                    <div class="prijs-regel totaal">
+                        <span>Totaal huur</span>
+                        <span id="prijs-totaal">-</span>
+                    </div>
+                    <div class="prijs-regel">
+                        <span>Borg (retour)</span>
+                        <span>&euro;250,00</span>
+                    </div>
+                </div>
+
+                <h3 style="margin: 24px 0 16px; font-size: 15px;">Uw Gegevens</h3>
+                <div class="form-group">
+                    <label>Volledige naam *</label>
+                    <input type="text" id="klant-naam" placeholder="Jan de Vries">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>E-mailadres *</label>
+                        <input type="email" id="klant-email" placeholder="jan@voorbeeld.nl">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefoonnummer</label>
+                        <input type="tel" id="klant-telefoon" placeholder="06-12345678">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Rijbewijsnummer *</label>
+                    <input type="text" id="klant-rijbewijs" placeholder="Rijbewijsnummer (AM of B)">
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="voorwaarden">
+                    <label for="voorwaarden">Ik ga akkoord met de algemene voorwaarden en heb de huurvoorwaarden gelezen. Ik beschik over een geldig AM- of B-rijbewijs.</label>
+                </div>
+                <div id="form-error" style="color:var(--rood);font-size:12px;margin-bottom:12px;display:none"></div>
+                <button class="btn btn-primary" onclick="verzendReservering()" style="width:100%;justify-content:center;">
+                    <span class="material-icons">check_circle</span>
+                    Bevestig Reservering
+                </button>
+            </div>
+
+            <!-- Stap 2: Bevestiging -->
+            <div id="stap-2" style="display:none">
+                <div class="bevestiging">
+                    <span class="material-icons">check_circle</span>
+                    <h3>Reservering Bevestigd!</h3>
+                    <p>Uw reservering is succesvol aangemaakt.</p>
+                    <div class="reservering-nr" id="res-nr"></div>
+                    <p style="font-size:13px;color:var(--grijs-500);margin-top:16px">
+                        Bewaar dit reserveringsnummer. U ontvangt een bevestiging per e-mail.
+                        Neem uw rijbewijs en de borg (&euro;250) mee bij het ophalen.
+                    </p>
+                    <button class="btn btn-primary" onclick="closeModal()" style="margin-top:24px">Sluiten</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API = '';
+
+    // ========== Fietsen laden ==========
+    async function laadFietsen() {
+        try {
+            const res = await fetch(`${API}/api/fietsen`);
+            const fietsen = await res.json();
+            const grid = document.getElementById('fietsen-grid');
+            const select = document.getElementById('fiets-select');
+
+            grid.innerHTML = fietsen.map(f => `
+                <div class="fiets-card">
+                    <div class="fiets-img">
+                        <span class="material-icons">electric_moped</span>
+                        <span class="fiets-badge badge-${f.status}">${f.status.charAt(0).toUpperCase() + f.status.slice(1)}</span>
+                    </div>
+                    <div class="fiets-info">
+                        <h3>${f.naam}</h3>
+                        <div class="fiets-specs">
+                            <div class="fiets-spec">
+                                <span class="material-icons">battery_charging_full</span>
+                                ${f.bereik_km} km bereik
+                            </div>
+                            <div class="fiets-spec">
+                                <span class="material-icons">speed</span>
+                                Max ${f.max_snelheid} km/u
+                            </div>
+                            <div class="fiets-spec">
+                                <span class="material-icons">bolt</span>
+                                Elektrisch
+                            </div>
+                        </div>
+                        <div class="fiets-prijs">&euro;25 <span>/ dag</span></div>
+                        <button class="btn btn-primary" onclick="openModal(${f.id})" ${f.status !== 'beschikbaar' ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>
+                            ${f.status === 'beschikbaar' ? 'Reserveer Nu' : f.status === 'verhuurd' ? 'Niet Beschikbaar' : 'In Onderhoud'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Vul select
+            select.innerHTML = '<option value="">Selecteer een bromfiets...</option>' +
+                fietsen.filter(f => f.status === 'beschikbaar').map(f =>
+                    `<option value="${f.id}">${f.naam} ${f.notities ? '(' + f.notities + ')' : ''}</option>`
+                ).join('');
+        } catch(e) {
+            console.error('Fout bij laden fietsen:', e);
+            document.getElementById('fietsen-grid').innerHTML =
+                '<p style="text-align:center;color:var(--grijs-500);grid-column:1/-1">Kan fietsen niet laden. Controleer of de server draait op poort 8092.</p>';
+        }
+    }
+
+    // ========== Modal ==========
+    function openModal(fietsId) {
+        document.getElementById('modal-overlay').classList.add('active');
+        document.getElementById('stap-1').style.display = 'block';
+        document.getElementById('stap-2').style.display = 'none';
+        document.getElementById('form-error').style.display = 'none';
+        document.getElementById('prijs-overzicht').style.display = 'none';
+
+        // Stel minimum datum in op vandaag
+        const vandaag = new Date().toISOString().split('T')[0];
+        document.getElementById('ophaal-datum').min = vandaag;
+        document.getElementById('inlever-datum').min = vandaag;
+
+        if (fietsId) {
+            document.getElementById('fiets-select').value = fietsId;
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('modal-overlay').classList.remove('active');
+    }
+
+    // Sluit modal bij klik buiten
+    document.getElementById('modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    // ========== Prijsberekening ==========
+    function berekenPrijs() {
+        const van = document.getElementById('ophaal-datum').value;
+        const tot = document.getElementById('inlever-datum').value;
+        if (!van || !tot) return;
+
+        const d1 = new Date(van);
+        const d2 = new Date(tot);
+        let dagen = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
+        if (dagen <= 0) dagen = 1;
+
+        let totaal, dagprijs;
+        if (dagen >= 30) {
+            totaal = (dagen / 30) * 450;
+            dagprijs = totaal / dagen;
+        } else if (dagen >= 7) {
+            totaal = (dagen / 7) * 150;
+            dagprijs = totaal / dagen;
+        } else {
+            dagprijs = 25;
+            totaal = dagen * 25;
+        }
+
+        document.getElementById('prijs-overzicht').style.display = 'block';
+        document.getElementById('prijs-dagen').textContent = dagen + (dagen === 1 ? ' dag' : ' dagen');
+        document.getElementById('prijs-dag').textContent = '\u20AC' + dagprijs.toFixed(2).replace('.', ',');
+        document.getElementById('prijs-totaal').textContent = '\u20AC' + totaal.toFixed(2).replace('.', ',');
+    }
+
+    document.getElementById('ophaal-datum').addEventListener('change', berekenPrijs);
+    document.getElementById('inlever-datum').addEventListener('change', berekenPrijs);
+
+    // ========== Reservering versturen ==========
+    async function verzendReservering() {
+        const errorEl = document.getElementById('form-error');
+        errorEl.style.display = 'none';
+
+        const fietsId = document.getElementById('fiets-select').value;
+        const ophaalDatum = document.getElementById('ophaal-datum').value;
+        const inleverDatum = document.getElementById('inlever-datum').value;
+        const naam = document.getElementById('klant-naam').value.trim();
+        const email = document.getElementById('klant-email').value.trim();
+        const telefoon = document.getElementById('klant-telefoon').value.trim();
+        const rijbewijs = document.getElementById('klant-rijbewijs').value.trim();
+        const voorwaarden = document.getElementById('voorwaarden').checked;
+
+        // Validatie
+        if (!fietsId) return toonError('Selecteer een bromfiets.');
+        if (!ophaalDatum || !inleverDatum) return toonError('Vul beide datums in.');
+        if (new Date(inleverDatum) <= new Date(ophaalDatum)) return toonError('Inleverdatum moet na ophaaldatum liggen.');
+        if (!naam) return toonError('Vul uw naam in.');
+        if (!email) return toonError('Vul uw e-mailadres in.');
+        if (!rijbewijs) return toonError('Vul uw rijbewijsnummer in.');
+        if (!voorwaarden) return toonError('U dient akkoord te gaan met de voorwaarden.');
+
+        try {
+            const res = await fetch(`${API}/api/reservering`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fiets_id: parseInt(fietsId),
+                    ophaal_datum: ophaalDatum,
+                    inlever_datum: inleverDatum,
+                    naam: naam,
+                    email: email,
+                    telefoon: telefoon,
+                    rijbewijs_nr: rijbewijs
+                })
+            });
+
+            const data = await res.json();
+            if (!res.ok) return toonError(data.error || 'Er ging iets mis.');
+
+            document.getElementById('stap-1').style.display = 'none';
+            document.getElementById('stap-2').style.display = 'block';
+            document.getElementById('res-nr').textContent = data.reservering.reservering_nr;
+
+            // Herlaad fietsen
+            laadFietsen();
+        } catch(e) {
+            toonError('Kan geen verbinding maken met de server.');
+        }
+    }
+
+    function toonError(msg) {
+        const el = document.getElementById('form-error');
+        el.textContent = msg;
+        el.style.display = 'block';
+    }
+
+    // ========== FAQ ==========
+    function toggleFaq(el) {
+        const item = el.parentElement;
+        const antwoord = el.nextElementSibling;
+        const isOpen = item.classList.contains('open');
+
+        // Sluit alle
+        document.querySelectorAll('.faq-item').forEach(i => {
+            i.classList.remove('open');
+            i.querySelector('.faq-antwoord').style.maxHeight = '0';
+        });
+
+        if (!isOpen) {
+            item.classList.add('open');
+            antwoord.style.maxHeight = antwoord.scrollHeight + 'px';
+        }
+    }
+
+    // ========== Smooth scroll ==========
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                document.querySelector('.nav-links').classList.remove('open');
+            }
+        });
+    });
+
+    // ========== Init ==========
+    laadFietsen();
+</script>
+
+</body>
+</html>

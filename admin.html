@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Darosa Fietsverhuur</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --blauw: #0066FF;
+            --blauw-donker: #0052CC;
+            --blauw-licht: #E6F0FF;
+            --grijs-50: #F8FAFC;
+            --grijs-100: #F1F5F9;
+            --grijs-200: #E2E8F0;
+            --grijs-300: #CBD5E1;
+            --grijs-500: #64748B;
+            --grijs-700: #334155;
+            --grijs-900: #0F172A;
+            --groen: #10B981;
+            --groen-licht: #ECFDF5;
+            --oranje: #F59E0B;
+            --oranje-licht: #FFFBEB;
+            --rood: #EF4444;
+            --rood-licht: #FEF2F2;
+            --wit: #FFFFFF;
+            --schaduw: 0 1px 3px rgba(0,0,0,0.1);
+            --schaduw-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+
+        body {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            color: var(--grijs-900);
+            background: var(--grijs-50);
+            line-height: 1.6;
+        }
+
+        /* ========== LOGIN ========== */
+        .login-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, var(--blauw-licht), var(--wit));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .login-overlay.hidden { display: none; }
+        .login-box {
+            background: var(--wit);
+            border-radius: var(--radius);
+            padding: 48px;
+            box-shadow: var(--schaduw-lg);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-box .material-icons { font-size: 48px; color: var(--blauw); margin-bottom: 16px; }
+        .login-box h2 { font-size: 20px; margin-bottom: 8px; }
+        .login-box p { font-size: 13px; color: var(--grijs-500); margin-bottom: 24px; }
+        .login-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--grijs-200);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .login-box input:focus { outline: none; border-color: var(--blauw); }
+        .login-error { color: var(--rood); font-size: 12px; margin-bottom: 12px; display: none; }
+
+        /* ========== LAYOUT ========== */
+        .admin-container { display: none; }
+        .admin-container.active { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 240px;
+            background: var(--grijs-900);
+            color: var(--wit);
+            padding: 24px 0;
+            flex-shrink: 0;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+        .sidebar-logo {
+            padding: 0 20px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 16px;
+        }
+        .sidebar-logo h3 {
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-logo h3 .material-icons { color: var(--blauw); }
+        .sidebar-logo p { font-size: 11px; color: var(--grijs-500); margin-top: 4px; }
+        .sidebar-nav { list-style: none; }
+        .sidebar-nav li {
+            padding: 0 12px;
+            margin-bottom: 2px;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            color: var(--grijs-300);
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .sidebar-nav a:hover { background: rgba(255,255,255,0.1); color: var(--wit); }
+        .sidebar-nav a.active { background: var(--blauw); color: var(--wit); }
+        .sidebar-nav .material-icons { font-size: 20px; }
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 16px;
+        }
+        .sidebar-footer a {
+            color: var(--grijs-500);
+            text-decoration: none;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-footer a:hover { color: var(--wit); }
+
+        .main { flex: 1; margin-left: 240px; padding: 32px; }
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        .main-header h1 { font-size: 22px; }
+        .main-header p { font-size: 13px; color: var(--grijs-500); margin-top: 4px; }
+
+        /* ========== DASHBOARD CARDS ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: var(--wit);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--schaduw);
+        }
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .stat-card-header span { font-size: 13px; color: var(--grijs-500); }
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .stat-icon .material-icons { font-size: 20px; }
+        .stat-icon.blauw { background: var(--blauw-licht); color: var(--blauw); }
+        .stat-icon.groen { background: var(--groen-licht); color: var(--groen); }
+        .stat-icon.oranje { background: var(--oranje-licht); color: var(--oranje); }
+        .stat-icon.rood { background: var(--rood-licht); color: var(--rood); }
+        .stat-value { font-size: 28px; font-weight: bold; }
+
+        /* ========== TABELLEN ========== */
+        .card {
+            background: var(--wit);
+            border-radius: var(--radius);
+            box-shadow: var(--schaduw);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--grijs-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header h3 { font-size: 15px; }
+        .card-body { padding: 0; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            text-align: left;
+            padding: 12px 20px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--grijs-500);
+            background: var(--grijs-50);
+            border-bottom: 1px solid var(--grijs-100);
+        }
+        td {
+            padding: 14px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid var(--grijs-100);
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--grijs-50); }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .badge-beschikbaar { background: var(--groen-licht); color: var(--groen); }
+        .badge-verhuurd { background: var(--oranje-licht); color: var(--oranje); }
+        .badge-onderhoud { background: var(--rood-licht); color: var(--rood); }
+        .badge-bevestigd { background: var(--blauw-licht); color: var(--blauw); }
+        .badge-actief { background: var(--groen-licht); color: var(--groen); }
+        .badge-afgerond { background: var(--grijs-100); color: var(--grijs-500); }
+        .badge-geannuleerd { background: var(--rood-licht); color: var(--rood); }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-sm { padding: 5px 10px; font-size: 11px; }
+        .btn-primary { background: var(--blauw); color: var(--wit); }
+        .btn-primary:hover { background: var(--blauw-donker); }
+        .btn-outline { background: var(--wit); color: var(--blauw); border: 1px solid var(--grijs-200); }
+        .btn-outline:hover { background: var(--blauw-licht); }
+        .btn-success { background: var(--groen); color: var(--wit); }
+        .btn-danger { background: var(--rood); color: var(--wit); }
+        .btn-warning { background: var(--oranje); color: var(--wit); }
+
+        .actions { display: flex; gap: 6px; }
+
+        /* ========== PAGINA'S ========== */
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .empty-state {
+            padding: 48px;
+            text-align: center;
+            color: var(--grijs-500);
+        }
+        .empty-state .material-icons { font-size: 48px; color: var(--grijs-300); margin-bottom: 16px; }
+
+        /* ========== STATUS DROPDOWN ========== */
+        select.status-select {
+            padding: 5px 10px;
+            border: 1px solid var(--grijs-200);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; }
+            table { display: block; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-overlay" id="login-overlay">
+    <div class="login-box">
+        <span class="material-icons">admin_panel_settings</span>
+        <h2>Admin Dashboard</h2>
+        <p>Darosa Fietsverhuur Beheer</p>
+        <div class="login-error" id="login-error">Onjuist wachtwoord</div>
+        <input type="password" id="login-pw" placeholder="Wachtwoord" onkeyup="if(event.key==='Enter')login()">
+        <button class="btn btn-primary" onclick="login()" style="width:100%;justify-content:center;padding:12px">
+            <span class="material-icons">login</span> Inloggen
+        </button>
+    </div>
+</div>
+
+<!-- ADMIN -->
+<div class="admin-container" id="admin-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h3><span class="material-icons">electric_moped</span> Darosa</h3>
+            <p>Fietsverhuur Admin</p>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="#" class="active" data-page="dashboard"><span class="material-icons">dashboard</span> Dashboard</a></li>
+            <li><a href="#" data-page="fietsen"><span class="material-icons">two_wheeler</span> Fietsen</a></li>
+            <li><a href="#" data-page="reserveringen"><span class="material-icons">event_note</span> Reserveringen</a></li>
+            <li><a href="#" data-page="klanten"><span class="material-icons">people</span> Klanten</a></li>
+            <li><a href="#" data-page="inkomsten"><span class="material-icons">payments</span> Inkomsten</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <a href="/" target="_blank"><span class="material-icons">language</span> Bekijk Website</a>
+            <br><br>
+            <a href="#" onclick="logout()"><span class="material-icons">logout</span> Uitloggen</a>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main">
+
+        <!-- ==================== DASHBOARD ==================== -->
+        <div class="page active" id="page-dashboard">
+            <div class="main-header">
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Overzicht van uw fietsverhuur</p>
+                </div>
+            </div>
+
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span>Totaal Fietsen</span>
+                        <div class="stat-icon blauw"><span class="material-icons">two_wheeler</span></div>
+                    </div>
+                    <div class="stat-value" id="stat-totaal-fietsen">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span>Beschikbaar</span>
+                        <div class="stat-icon groen"><span class="material-icons">check_circle</span></div>
+                    </div>
+                    <div class="stat-value" id="stat-beschikbaar">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span>Verhuurd</span>
+                        <div class="stat-icon oranje"><span class="material-icons">directions_bike</span></div>
+                    </div>
+                    <div class="stat-value" id="stat-verhuurd">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span>Actieve Reserveringen</span>
+                        <div class="stat-icon blauw"><span class="material-icons">event</span></div>
+                    </div>
+                    <div class="stat-value" id="stat-actief">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span>Omzet Deze Maand</span>
+                        <div class="stat-icon groen"><span class="material-icons">euro</span></div>
+                    </div>
+                    <div class="stat-value" id="stat-omzet-maand">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span>Totale Omzet</span>
+                        <div class="stat-icon blauw"><span class="material-icons">account_balance</span></div>
+                    </div>
+                    <div class="stat-value" id="stat-omzet-totaal">-</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Recente Reserveringen</h3>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nr.</th>
+                                <th>Klant</th>
+                                <th>Fiets</th>
+                                <th>Periode</th>
+                                <th>Totaal</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-reserveringen">
+                            <tr><td colspan="6" class="empty-state">Laden...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== FIETSEN ==================== -->
+        <div class="page" id="page-fietsen">
+            <div class="main-header">
+                <div>
+                    <h1>Fietsen</h1>
+                    <p>Beheer uw vloot van 5 Fuell Flluid bromfietsen</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Naam</th>
+                                <th>Model</th>
+                                <th>Bereik</th>
+                                <th>Max Snelheid</th>
+                                <th>Kenteken</th>
+                                <th>Status</th>
+                                <th>Acties</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fietsen-tabel">
+                            <tr><td colspan="8" class="empty-state">Laden...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== RESERVERINGEN ==================== -->
+        <div class="page" id="page-reserveringen">
+            <div class="main-header">
+                <div>
+                    <h1>Reserveringen</h1>
+                    <p>Alle boekingen overzichtelijk</p>
+                </div>
+                <div>
+                    <select id="filter-status" onchange="laadReserveringen()" style="padding:8px 12px;border:1px solid var(--grijs-200);border-radius:6px;font-family:inherit;font-size:13px;">
+                        <option value="">Alle statussen</option>
+                        <option value="bevestigd">Bevestigd</option>
+                        <option value="actief">Actief</option>
+                        <option value="afgerond">Afgerond</option>
+                        <option value="geannuleerd">Geannuleerd</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Reservering Nr.</th>
+                                <th>Klant</th>
+                                <th>Fiets</th>
+                                <th>Ophalen</th>
+                                <th>Inleveren</th>
+                                <th>Totaal</th>
+                                <th>Status</th>
+                                <th>Acties</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reserveringen-tabel">
+                            <tr><td colspan="8" class="empty-state">Laden...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== KLANTEN ==================== -->
+        <div class="page" id="page-klanten">
+            <div class="main-header">
+                <div>
+                    <h1>Klanten</h1>
+                    <p>Overzicht van alle klanten</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Naam</th>
+                                <th>E-mail</th>
+                                <th>Telefoon</th>
+                                <th>Rijbewijs</th>
+                                <th>Reserveringen</th>
+                                <th>Sinds</th>
+                            </tr>
+                        </thead>
+                        <tbody id="klanten-tabel">
+                            <tr><td colspan="7" class="empty-state">Laden...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== INKOMSTEN ==================== -->
+        <div class="page" id="page-inkomsten">
+            <div class="main-header">
+                <div>
+                    <h1>Inkomsten</h1>
+                    <p>Omzet overzicht per week en maand</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span>Omzet Deze Maand</span>
+                        <div class="stat-icon groen"><span class="material-icons">trending_up</span></div>
+                    </div>
+                    <div class="stat-value" id="ink-omzet-maand">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span>Totale Omzet</span>
+                        <div class="stat-icon blauw"><span class="material-icons">account_balance</span></div>
+                    </div>
+                    <div class="stat-value" id="ink-omzet-totaal">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <span>Totaal Reserveringen</span>
+                        <div class="stat-icon oranje"><span class="material-icons">receipt_long</span></div>
+                    </div>
+                    <div class="stat-value" id="ink-totaal-res">-</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Omzet per Week (laatste 8 weken)</h3>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Week van</th>
+                                <th>Aantal Reserveringen</th>
+                                <th>Omzet</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inkomsten-tabel">
+                            <tr><td colspan="3" class="empty-state">Laden...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const API = '';
+
+    // ========== LOGIN ==========
+    function login() {
+        const pw = document.getElementById('login-pw').value;
+        if (pw === 'admin') {
+            document.getElementById('login-overlay').classList.add('hidden');
+            document.getElementById('admin-container').classList.add('active');
+            sessionStorage.setItem('darosa_admin', 'true');
+            laadAlles();
+        } else {
+            document.getElementById('login-error').style.display = 'block';
+        }
+    }
+
+    function logout() {
+        sessionStorage.removeItem('darosa_admin');
+        document.getElementById('login-overlay').classList.remove('hidden');
+        document.getElementById('admin-container').classList.remove('active');
+        document.getElementById('login-pw').value = '';
+    }
+
+    // Auto-login check
+    if (sessionStorage.getItem('darosa_admin') === 'true') {
+        document.getElementById('login-overlay').classList.add('hidden');
+        document.getElementById('admin-container').classList.add('active');
+        setTimeout(laadAlles, 100);
+    }
+
+    // ========== NAVIGATIE ==========
+    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + this.dataset.page).classList.add('active');
+        });
+    });
+
+    // ========== DATA LADEN ==========
+    async function laadAlles() {
+        await Promise.all([
+            laadStats(),
+            laadFietsen(),
+            laadReserveringen(),
+            laadKlanten()
+        ]);
+    }
+
+    async function laadStats() {
+        try {
+            const res = await fetch(`${API}/api/stats`);
+            const data = await res.json();
+
+            document.getElementById('stat-totaal-fietsen').textContent = data.fietsen.totaal;
+            document.getElementById('stat-beschikbaar').textContent = data.fietsen.beschikbaar;
+            document.getElementById('stat-verhuurd').textContent = data.fietsen.verhuurd;
+            document.getElementById('stat-actief').textContent = data.reserveringen.actief;
+            document.getElementById('stat-omzet-maand').textContent = formatBedrag(data.omzet.deze_maand);
+            document.getElementById('stat-omzet-totaal').textContent = formatBedrag(data.omzet.totaal);
+
+            // Inkomsten pagina
+            document.getElementById('ink-omzet-maand').textContent = formatBedrag(data.omzet.deze_maand);
+            document.getElementById('ink-omzet-totaal').textContent = formatBedrag(data.omzet.totaal);
+            document.getElementById('ink-totaal-res').textContent = data.reserveringen.totaal;
+
+            // Omzet per week tabel
+            const tbody = document.getElementById('inkomsten-tabel');
+            if (data.omzet.per_week.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" class="empty-state"><span class="material-icons">payments</span><br>Nog geen omzet geregistreerd</td></tr>';
+            } else {
+                tbody.innerHTML = data.omzet.per_week.map(w => `
+                    <tr>
+                        <td>${formatDatum(w.week)}</td>
+                        <td>${w.aantal}</td>
+                        <td><strong>${formatBedrag(w.omzet)}</strong></td>
+                    </tr>
+                `).join('');
+            }
+        } catch(e) {
+            console.error('Stats laden mislukt:', e);
+        }
+    }
+
+    async function laadFietsen() {
+        try {
+            const res = await fetch(`${API}/api/fietsen`);
+            const fietsen = await res.json();
+            document.getElementById('fietsen-tabel').innerHTML = fietsen.map(f => `
+                <tr>
+                    <td>${f.id}</td>
+                    <td><strong>${f.naam}</strong></td>
+                    <td>${f.model}</td>
+                    <td>${f.bereik_km} km</td>
+                    <td>${f.max_snelheid} km/u</td>
+                    <td>${f.kenteken || '<span style="color:var(--grijs-300)">Nog geen</span>'}</td>
+                    <td><span class="badge badge-${f.status}">${f.status}</span></td>
+                    <td>
+                        <select class="status-select" onchange="updateFietsStatus(${f.id}, this.value)">
+                            <option value="beschikbaar" ${f.status === 'beschikbaar' ? 'selected' : ''}>Beschikbaar</option>
+                            <option value="verhuurd" ${f.status === 'verhuurd' ? 'selected' : ''}>Verhuurd</option>
+                            <option value="onderhoud" ${f.status === 'onderhoud' ? 'selected' : ''}>Onderhoud</option>
+                        </select>
+                    </td>
+                </tr>
+            `).join('');
+        } catch(e) {
+            document.getElementById('fietsen-tabel').innerHTML = '<tr><td colspan="8" class="empty-state">Kan fietsen niet laden</td></tr>';
+        }
+    }
+
+    async function laadReserveringen() {
+        try {
+            const status = document.getElementById('filter-status')?.value || '';
+            const url = status ? `${API}/api/reserveringen?status=${status}` : `${API}/api/reserveringen`;
+            const res = await fetch(url);
+            const reserveringen = await res.json();
+
+            // Dashboard recente 5
+            const dashboard = document.getElementById('dashboard-reserveringen');
+            const recente = reserveringen.slice(0, 5);
+            if (recente.length === 0) {
+                dashboard.innerHTML = '<tr><td colspan="6" class="empty-state"><span class="material-icons">event_note</span><br>Nog geen reserveringen</td></tr>';
+            } else {
+                dashboard.innerHTML = recente.map(r => `
+                    <tr>
+                        <td><strong>${r.reservering_nr}</strong></td>
+                        <td>${r.klant_naam}</td>
+                        <td>${r.fiets_naam}</td>
+                        <td>${formatDatum(r.ophaal_datum)} - ${formatDatum(r.inlever_datum)}</td>
+                        <td>${formatBedrag(r.totaal)}</td>
+                        <td><span class="badge badge-${r.status}">${r.status}</span></td>
+                    </tr>
+                `).join('');
+            }
+
+            // Reserveringen pagina
+            const tabel = document.getElementById('reserveringen-tabel');
+            if (reserveringen.length === 0) {
+                tabel.innerHTML = '<tr><td colspan="8" class="empty-state"><span class="material-icons">event_note</span><br>Geen reserveringen gevonden</td></tr>';
+            } else {
+                tabel.innerHTML = reserveringen.map(r => `
+                    <tr>
+                        <td><strong>${r.reservering_nr}</strong></td>
+                        <td>${r.klant_naam}<br><small style="color:var(--grijs-500)">${r.klant_email || ''}</small></td>
+                        <td>${r.fiets_naam}</td>
+                        <td>${formatDatum(r.ophaal_datum)}</td>
+                        <td>${formatDatum(r.inlever_datum)}</td>
+                        <td>${formatBedrag(r.totaal)}</td>
+                        <td><span class="badge badge-${r.status}">${r.status}</span></td>
+                        <td>
+                            <div class="actions">
+                                ${r.status === 'bevestigd' ? `<button class="btn btn-sm btn-success" onclick="updateReservering(${r.id}, 'actief')">Activeer</button>` : ''}
+                                ${r.status === 'actief' ? `<button class="btn btn-sm btn-outline" onclick="updateReservering(${r.id}, 'afgerond')">Afronden</button>` : ''}
+                                ${r.status === 'bevestigd' ? `<button class="btn btn-sm btn-danger" onclick="updateReservering(${r.id}, 'geannuleerd')">Annuleer</button>` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        } catch(e) {
+            console.error('Reserveringen laden mislukt:', e);
+        }
+    }
+
+    async function laadKlanten() {
+        try {
+            const res = await fetch(`${API}/api/klanten`);
+            const klanten = await res.json();
+            const tabel = document.getElementById('klanten-tabel');
+            if (klanten.length === 0) {
+                tabel.innerHTML = '<tr><td colspan="7" class="empty-state"><span class="material-icons">people</span><br>Nog geen klanten</td></tr>';
+            } else {
+                tabel.innerHTML = klanten.map(k => `
+                    <tr>
+                        <td>${k.id}</td>
+                        <td><strong>${k.naam}</strong></td>
+                        <td>${k.email || '-'}</td>
+                        <td>${k.telefoon || '-'}</td>
+                        <td>${k.rijbewijs_nr || '-'}</td>
+                        <td>${k.aantal_reserveringen}</td>
+                        <td>${formatDatum(k.created_at)}</td>
+                    </tr>
+                `).join('');
+            }
+        } catch(e) {
+            console.error('Klanten laden mislukt:', e);
+        }
+    }
+
+    // ========== ACTIES ==========
+    async function updateFietsStatus(id, status) {
+        try {
+            await fetch(`${API}/api/fietsen/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            await laadAlles();
+        } catch(e) {
+            alert('Fout bij updaten status');
+        }
+    }
+
+    async function updateReservering(id, status) {
+        try {
+            await fetch(`${API}/api/reserveringen/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            await laadAlles();
+        } catch(e) {
+            alert('Fout bij updaten reservering');
+        }
+    }
+
+    // ========== HELPERS ==========
+    function formatBedrag(bedrag) {
+        if (!bedrag && bedrag !== 0) return '-';
+        return '\u20AC' + Number(bedrag).toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    function formatDatum(str) {
+        if (!str) return '-';
+        const d = new Date(str);
+        return d.toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+</script>
+
+</body>
+</html>
