@@ -370,6 +370,87 @@
         .fauna-info p { font-size: 12px; color: var(--grijs-500); }
 
         /* ========== FIETSEN ========== */
+        .bikes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .bike-individual {
+            background: var(--wit);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--schaduw);
+            border: 1px solid var(--kaart-border);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+        }
+        .bike-individual:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--schaduw-lg);
+        }
+        .bike-individual-header {
+            padding: 20px 16px 12px;
+            position: relative;
+        }
+        .bike-individual-header .material-icons {
+            font-size: 40px;
+            color: var(--groen-licht);
+        }
+        .bike-individual-name {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--groen);
+            margin-top: 8px;
+        }
+        .bike-individual-color {
+            font-size: 11px;
+            color: var(--grijs-500);
+            margin-top: 2px;
+        }
+        .bike-individual-location {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--groen-licht);
+            background: var(--groen-bg);
+            padding: 3px 10px;
+            border-radius: 50px;
+            margin-top: 8px;
+        }
+        .bike-individual-location .material-icons { font-size: 12px; }
+        .bike-individual-specs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--kaart-border);
+            margin-top: 12px;
+        }
+        .bike-individual-spec {
+            background: var(--wit);
+            padding: 8px 4px;
+        }
+        .bike-individual-spec strong {
+            display: block;
+            font-size: 14px;
+            color: var(--groen);
+        }
+        .bike-individual-spec span {
+            font-size: 9px;
+            color: var(--grijs-500);
+        }
+        .bike-status {
+            padding: 8px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .bike-status.beschikbaar { color: var(--groen-licht); background: var(--groen-bg); }
+        .bike-status.verhuurd { color: #E65100; background: #FFF3E0; }
+        .bike-status.onderhoud { color: #757575; background: #F5F5F5; }
         .bike-card {
             background: var(--wit);
             border-radius: var(--radius);
@@ -1278,38 +1359,75 @@
 <section id="fietsen">
     <div class="container">
         <div class="section-title">
-            <div class="section-label">ONZE FIETSEN</div>
-            <h2>Fuell Flluid E-Bikes</h2>
-            <p>Premium elektrische bromfietsen ontworpen door Erik Buell, legendarisch motorontwerper. Stil, snel en met een bereik dat je overal brengt.</p>
+            <div class="section-label">ONZE VLOOT</div>
+            <h2>5 Fuell Flluid E-Bikes</h2>
+            <p>Premium elektrische bromfietsen ontworpen door Erik Buell. 150 km bereik, 45 km/u, rijbewijs AM of B vereist.</p>
         </div>
-        <div class="bike-card">
-            <div class="bike-header">
-                <span class="material-icons">electric_moped</span>
-                <h3>Fuell Flluid</h3>
-                <p>Elektrische bromfiets</p>
-                <div class="bike-count">5 beschikbaar</div>
+        <div class="bikes-grid" id="bikes-grid">
+            <div class="bike-individual">
+                <div class="bike-individual-header">
+                    <span class="material-icons">electric_moped</span>
+                    <div class="bike-individual-name">Fuell Flluid #1</div>
+                    <div class="bike-individual-color">Midnight Black</div>
+                    <div class="bike-individual-location"><span class="material-icons">location_on</span> Arnhem Centrum</div>
+                </div>
+                <div class="bike-individual-specs">
+                    <div class="bike-individual-spec"><strong>150 km</strong><span>Bereik</span></div>
+                    <div class="bike-individual-spec"><strong>45 km/u</strong><span>Max</span></div>
+                </div>
+                <div class="bike-status beschikbaar">Beschikbaar</div>
             </div>
-            <div class="bike-specs">
-                <div class="bike-spec">
-                    <span class="material-icons">battery_charging_full</span>
-                    <div class="bike-spec-value">150 km</div>
-                    <div class="bike-spec-label">Bereik per lading</div>
+            <div class="bike-individual">
+                <div class="bike-individual-header">
+                    <span class="material-icons">electric_moped</span>
+                    <div class="bike-individual-name">Fuell Flluid #2</div>
+                    <div class="bike-individual-color">Midnight Black</div>
+                    <div class="bike-individual-location"><span class="material-icons">location_on</span> Arnhem Centrum</div>
                 </div>
-                <div class="bike-spec">
-                    <span class="material-icons">speed</span>
-                    <div class="bike-spec-value">45 km/u</div>
-                    <div class="bike-spec-label">Maximale snelheid</div>
+                <div class="bike-individual-specs">
+                    <div class="bike-individual-spec"><strong>150 km</strong><span>Bereik</span></div>
+                    <div class="bike-individual-spec"><strong>45 km/u</strong><span>Max</span></div>
                 </div>
-                <div class="bike-spec">
-                    <span class="material-icons">badge</span>
-                    <div class="bike-spec-value">AM / B</div>
-                    <div class="bike-spec-label">Rijbewijs vereist</div>
+                <div class="bike-status beschikbaar">Beschikbaar</div>
+            </div>
+            <div class="bike-individual">
+                <div class="bike-individual-header">
+                    <span class="material-icons">electric_moped</span>
+                    <div class="bike-individual-name">Fuell Flluid #3</div>
+                    <div class="bike-individual-color">Arctic White</div>
+                    <div class="bike-individual-location"><span class="material-icons">location_on</span> Arnhem Centrum</div>
                 </div>
-                <div class="bike-spec">
-                    <span class="material-icons">bolt</span>
-                    <div class="bike-spec-value">100%</div>
-                    <div class="bike-spec-label">Elektrisch</div>
+                <div class="bike-individual-specs">
+                    <div class="bike-individual-spec"><strong>150 km</strong><span>Bereik</span></div>
+                    <div class="bike-individual-spec"><strong>45 km/u</strong><span>Max</span></div>
                 </div>
+                <div class="bike-status beschikbaar">Beschikbaar</div>
+            </div>
+            <div class="bike-individual">
+                <div class="bike-individual-header">
+                    <span class="material-icons">electric_moped</span>
+                    <div class="bike-individual-name">Fuell Flluid #4</div>
+                    <div class="bike-individual-color">Arctic White</div>
+                    <div class="bike-individual-location"><span class="material-icons">location_on</span> Serviced Apartments</div>
+                </div>
+                <div class="bike-individual-specs">
+                    <div class="bike-individual-spec"><strong>150 km</strong><span>Bereik</span></div>
+                    <div class="bike-individual-spec"><strong>45 km/u</strong><span>Max</span></div>
+                </div>
+                <div class="bike-status beschikbaar">Beschikbaar</div>
+            </div>
+            <div class="bike-individual">
+                <div class="bike-individual-header">
+                    <span class="material-icons">electric_moped</span>
+                    <div class="bike-individual-name">Fuell Flluid #5</div>
+                    <div class="bike-individual-color">Midnight Black</div>
+                    <div class="bike-individual-location"><span class="material-icons">location_on</span> Zandvoort</div>
+                </div>
+                <div class="bike-individual-specs">
+                    <div class="bike-individual-spec"><strong>150 km</strong><span>Bereik</span></div>
+                    <div class="bike-individual-spec"><strong>45 km/u</strong><span>Max</span></div>
+                </div>
+                <div class="bike-status beschikbaar">Beschikbaar</div>
             </div>
         </div>
     </div>
