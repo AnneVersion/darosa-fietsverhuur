@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Darosa Fietsverhuur - Elektrisch door de Veluwe | Arnhem</title>
-    <meta name="description" content="Ontdek Arnhem en de Veluwe op een Fuell E-Bike. Elektrisch door de groenste stad van Nederland. Vanaf EUR 45 per dag.">
+    <title>Darosa Fietsverhuur - Elektrisch door Arnhem & Zandvoort</title>
+    <meta name="description" content="Ontdek Arnhem, de Veluwe en Zandvoort op een Fuell E-Bike. 3 verhuurlocaties. Vanaf EUR 45 per dag.">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 24'><rect width='36' height='8' fill='%23AE1C28'/><rect y='8' width='36' height='8' fill='%23FFF'/><rect y='16' width='36' height='8' fill='%2321468B'/></svg>">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -772,6 +773,101 @@
             font-family: monospace;
         }
 
+        /* ========== LOCATIES ========== */
+        .locaties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+        }
+        .locatie-card {
+            background: var(--wit);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--schaduw);
+            border: 1px solid var(--kaart-border);
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .locatie-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--schaduw-lg);
+        }
+        .locatie-map {
+            height: 180px;
+            width: 100%;
+        }
+        .locatie-body { padding: 20px; }
+        .locatie-body h3 { font-size: 17px; margin-bottom: 4px; color: var(--groen); }
+        .locatie-type {
+            display: inline-block;
+            background: var(--groen-bg);
+            color: var(--groen-licht);
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .locatie-type.korting {
+            background: linear-gradient(135deg, #8B6914, #C9A227);
+            color: var(--wit);
+        }
+        .locatie-body p { font-size: 13px; color: var(--grijs-500); margin-bottom: 8px; }
+        .locatie-adres {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--tekst);
+            margin-bottom: 8px;
+        }
+        .locatie-adres .material-icons { font-size: 16px; color: var(--groen-licht); }
+        .locatie-beschikbaar {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--groen-bg);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--groen);
+        }
+        .locatie-beschikbaar .material-icons { font-size: 14px; }
+        .locatie-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--aarde);
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 12px;
+        }
+        .locatie-link:hover { text-decoration: underline; }
+
+        /* ========== GROTE KAART ========== */
+        #locatie-kaart {
+            height: 400px;
+            width: 100%;
+            border-radius: var(--radius);
+            border: 1px solid var(--kaart-border);
+            box-shadow: var(--schaduw);
+            margin-top: 32px;
+        }
+
+        /* ========== ROUTE REGIO LABELS ========== */
+        .route-regio {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-left: 8px;
+        }
+        .route-regio.arnhem { background: var(--groen-bg); color: var(--groen); }
+        .route-regio.zandvoort { background: #E3F2FD; color: #1565C0; }
+
         /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             .nav-links { display: none; }
@@ -788,6 +884,8 @@
             }
             .hero { min-height: auto; padding: 120px 20px 60px; }
             .hero-stats { gap: 24px; }
+            .locaties-grid { grid-template-columns: 1fr; }
+            #locatie-kaart { height: 280px; }
             .natuur-grid { grid-template-columns: 1fr; }
             .fauna-grid { grid-template-columns: 1fr; }
             .bike-specs { grid-template-columns: 1fr 1fr; }
@@ -814,6 +912,7 @@
             <span class="material-icons">menu</span>
         </button>
         <ul class="nav-links">
+            <li><a href="#locaties">Locaties</a></li>
             <li><a href="#natuur">Natuur</a></li>
             <li><a href="#fauna">Flora & Fauna</a></li>
             <li><a href="#fietsen">E-Bikes</a></li>
@@ -829,8 +928,8 @@
 <section class="hero">
     <div class="hero-content">
         <div class="hero-badge">ELEKTRISCH DOOR DE NATUUR</div>
-        <h1>Ontdek Arnhem & de Veluwe<br>op een Fuell E-Bike</h1>
-        <p class="hero-sub">Elektrisch door de groenste stad van Nederland. Langs bossen, heidevelden, uiterwaarden en de Veluwe.</p>
+        <h1>Ontdek Arnhem & Zandvoort<br>op een Fuell E-Bike</h1>
+        <p class="hero-sub">3 verhuurlocaties: Arnhem Centrum, bij de Serviced Apartments en Zandvoort aan Zee. Elektrisch door bossen, duinen en langs de kust.</p>
         <div class="hero-buttons">
             <button class="btn btn-hero" onclick="openModal()">
                 <span class="material-icons">event</span>
@@ -861,13 +960,87 @@
     </div>
 </section>
 
+<!-- LOCATIES -->
+<section id="locaties">
+    <div class="container">
+        <div class="section-title">
+            <div class="section-label">VERHUURLOCATIES</div>
+            <h2>3 Locaties, 1 E-Bike</h2>
+            <p>Huur een Fuell Flluid op in Arnhem of Zandvoort. Appartement huurders ontvangen 20% korting.</p>
+        </div>
+        <div class="locaties-grid">
+            <!-- Arnhem Centrum -->
+            <div class="locatie-card">
+                <div class="locatie-map" id="map-arnhem-centrum"></div>
+                <div class="locatie-body">
+                    <h3>Arnhem Centrum</h3>
+                    <div class="locatie-type">Los huren</div>
+                    <div class="locatie-adres">
+                        <span class="material-icons">location_on</span>
+                        Rosendaalsestraat 129, 6824 CD Arnhem
+                    </div>
+                    <p>Voor iedereen — toeristen, forensen, locals. Nabij de Veluwe, Sonsbeek en het centrum.</p>
+                    <div class="locatie-beschikbaar" id="beschikbaar-arnhem-centrum">
+                        <span class="material-icons">electric_moped</span>
+                        <span>3 beschikbaar</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Arnhem Apartments -->
+            <div class="locatie-card">
+                <div class="locatie-map" id="map-arnhem-apartments"></div>
+                <div class="locatie-body">
+                    <h3>Arnhem Apartments</h3>
+                    <div class="locatie-type korting">20% korting bij short-stay</div>
+                    <div class="locatie-adres">
+                        <span class="material-icons">location_on</span>
+                        Bij de Serviced Apartments
+                    </div>
+                    <p>Exclusief voor appartement huurders. Fiets direct vanaf je verblijf de natuur in.</p>
+                    <div class="locatie-beschikbaar" id="beschikbaar-arnhem-apartments">
+                        <span class="material-icons">electric_moped</span>
+                        <span>1 beschikbaar</span>
+                    </div>
+                    <a href="http://localhost:8088" class="locatie-link">
+                        <span class="material-icons" style="font-size:14px">apartment</span>
+                        Bekijk Appartementen
+                    </a>
+                </div>
+            </div>
+            <!-- Zandvoort aan Zee -->
+            <div class="locatie-card">
+                <div class="locatie-map" id="map-zandvoort"></div>
+                <div class="locatie-body">
+                    <h3>Zandvoort aan Zee</h3>
+                    <div class="locatie-type korting">20% korting bij short-stay</div>
+                    <div class="locatie-adres">
+                        <span class="material-icons">location_on</span>
+                        Bij het strandappartement, Zandvoort
+                    </div>
+                    <p>Fietsen langs de kust, door de duinen en over het strand. Ontdek de Kennemerduinen en Haarlem.</p>
+                    <div class="locatie-beschikbaar" id="beschikbaar-zandvoort">
+                        <span class="material-icons">electric_moped</span>
+                        <span>1 beschikbaar</span>
+                    </div>
+                    <a href="http://localhost:8088" class="locatie-link">
+                        <span class="material-icons" style="font-size:14px">apartment</span>
+                        Bekijk Appartementen
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Grote kaart met alle locaties -->
+        <div id="locatie-kaart"></div>
+    </div>
+</section>
+
 <!-- NATUUR -->
 <section id="natuur">
     <div class="container">
         <div class="section-title">
             <div class="section-label">ONTDEK</div>
             <h2>Wat kun je ontdekken?</h2>
-            <p>Arnhem ligt aan de rand van de Veluwe, het grootste aaneengesloten natuurgebied van Nederland. Stap op de e-bike en rij de natuur in.</p>
+            <p>Arnhem ligt aan de rand van de Veluwe, Zandvoort aan de Noordzee. Stap op de e-bike en rij de natuur in.</p>
         </div>
         <div class="natuur-grid">
             <div class="natuur-card">
@@ -948,6 +1121,19 @@
                     </div>
                 </div>
             </div>
+            <div class="natuur-card">
+                <div class="natuur-img" style="background: linear-gradient(135deg, #0D47A1 0%, #1565C0 30%, #42A5F5 60%, #90CAF9 100%);">
+                    <span class="material-icons">beach_access</span>
+                </div>
+                <div class="natuur-body">
+                    <h3>Zandvoort & Kennemerduinen</h3>
+                    <p>Nationaal Park Zuid-Kennemerland met Europese wisenten in het Kraansvlak. Duinvalleien, damherten en zeldzame orchideeën. Strand met zeehonden en bruinvissen.</p>
+                    <div class="natuur-meta">
+                        <div class="natuur-tag"><span class="material-icons">directions_bike</span> Vanuit Zandvoort</div>
+                        <div class="natuur-tag"><span class="material-icons">calendar_month</span> Zomer: strandleven</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -958,7 +1144,7 @@
         <div class="section-title">
             <div class="section-label">WILDLIFE</div>
             <h2>Wat kun je tegenkomen?</h2>
-            <p>De Veluwe en de uiterwaarden rond Arnhem zijn een van de rijkste wildlife-gebieden van West-Europa.</p>
+            <p>De Veluwe, de uiterwaarden rond Arnhem en de duinen bij Zandvoort — rijk aan wildlife.</p>
         </div>
         <div class="fauna-grid">
             <div class="fauna-card">
@@ -1015,6 +1201,35 @@
                 <div class="fauna-info">
                     <h4>Heideblauwtje</h4>
                     <p>Zeldzame vlinder op de heide bij de Posbank. Vliegt in juni-juli wanneer de heide nog niet bloeit.</p>
+                </div>
+            </div>
+            <!-- Zandvoort natuur -->
+            <div class="fauna-card">
+                <div class="fauna-icon"><span class="material-icons">pets</span></div>
+                <div class="fauna-info">
+                    <h4>Kraansvlak — Wisenten</h4>
+                    <p>Europese bizons in de duinen bij Zandvoort. Uniek in Nederland. Kudde van circa 25 dieren in het Kraansvlak.</p>
+                </div>
+            </div>
+            <div class="fauna-card">
+                <div class="fauna-icon"><span class="material-icons">forest</span></div>
+                <div class="fauna-info">
+                    <h4>Waterleidingduinen</h4>
+                    <p>Damherten, vossen en zeldzame orchideeën. Meer dan 900 hectare duinlandschap tussen Zandvoort en Den Haag.</p>
+                </div>
+            </div>
+            <div class="fauna-card">
+                <div class="fauna-icon"><span class="material-icons">eco</span></div>
+                <div class="fauna-info">
+                    <h4>Kennemerduinen</h4>
+                    <p>Duinvalleien, natte duinen en zeldzame planten. Nationaal Park Zuid-Kennemerland met unieke flora.</p>
+                </div>
+            </div>
+            <div class="fauna-card">
+                <div class="fauna-icon"><span class="material-icons">waves</span></div>
+                <div class="fauna-info">
+                    <h4>Strand & Zee</h4>
+                    <p>Zeehonden, bruinvissen en jan-van-genten langs de Zandvoortse kust. Zeevogels het hele jaar door.</p>
                 </div>
             </div>
         </div>
@@ -1130,12 +1345,12 @@
         <div class="section-title">
             <div class="section-label">ROUTES</div>
             <h2>Suggestieroutes</h2>
-            <p>Drie routes om het beste van Arnhem en omgeving te ontdekken. Van stadspark tot de Veluwe.</p>
+            <p>Zes routes door Arnhem en Zandvoort. Van de Veluwe tot de Noordzeekust.</p>
         </div>
         <div class="routes-grid">
             <div class="route-card">
                 <div class="route-header">
-                    <h3>Stadsroute</h3>
+                    <h3>Stadsroute <span class="route-regio arnhem">Arnhem</span></h3>
                     <div class="route-km">20 km</div>
                 </div>
                 <div class="route-body">
@@ -1152,7 +1367,7 @@
             </div>
             <div class="route-card">
                 <div class="route-header">
-                    <h3>Veluwe Route</h3>
+                    <h3>Veluwe Route <span class="route-regio arnhem">Arnhem</span></h3>
                     <div class="route-km">45 km</div>
                 </div>
                 <div class="route-body">
@@ -1169,7 +1384,7 @@
             </div>
             <div class="route-card">
                 <div class="route-header">
-                    <h3>Rivier Route</h3>
+                    <h3>Rivier Route <span class="route-regio arnhem">Arnhem</span></h3>
                     <div class="route-km">35 km</div>
                 </div>
                 <div class="route-body">
@@ -1181,6 +1396,60 @@
                         <span class="route-dot"></span> IJssel
                         <span class="route-dot"></span>
                         <span class="material-icons">flag</span> Arnhem
+                    </div>
+                </div>
+            </div>
+            <!-- Zandvoort Routes -->
+            <div class="route-card">
+                <div class="route-header">
+                    <h3>Strandroute <span class="route-regio zandvoort">Zandvoort</span></h3>
+                    <div class="route-km">15 km</div>
+                </div>
+                <div class="route-body">
+                    <p>Langs de boulevard en door de duinen naar Bloemendaal aan Zee. Zeelucht, golven en panorama.</p>
+                    <div class="route-stops">
+                        <span class="material-icons">flag</span> Zandvoort
+                        <span class="route-dot"></span> Boulevard
+                        <span class="route-dot"></span> Bloemendaal aan Zee
+                        <span class="route-dot"></span> Parnassia
+                        <span class="route-dot"></span>
+                        <span class="material-icons">flag</span> Zandvoort
+                    </div>
+                </div>
+            </div>
+            <div class="route-card">
+                <div class="route-header">
+                    <h3>Duinenroute <span class="route-regio zandvoort">Zandvoort</span></h3>
+                    <div class="route-km">25 km</div>
+                </div>
+                <div class="route-body">
+                    <p>Door Nationaal Park Zuid-Kennemerland. Wisenten spotten in het Kraansvlak, door duinvalleien en bossen.</p>
+                    <div class="route-stops">
+                        <span class="material-icons">flag</span> Zandvoort
+                        <span class="route-dot"></span> Zuid-Kennemerland
+                        <span class="route-dot"></span> Kraansvlak
+                        <span class="route-dot"></span> Overveen
+                        <span class="route-dot"></span> Bloemendaal
+                        <span class="route-dot"></span>
+                        <span class="material-icons">flag</span> Zandvoort
+                    </div>
+                </div>
+            </div>
+            <div class="route-card">
+                <div class="route-header">
+                    <h3>Haarlem Route <span class="route-regio zandvoort">Zandvoort</span></h3>
+                    <div class="route-km">30 km</div>
+                </div>
+                <div class="route-body">
+                    <p>Van strand naar stad. Door Overveen naar het historische centrum van Haarlem, langs de Spaarne en terug via Groenendaal.</p>
+                    <div class="route-stops">
+                        <span class="material-icons">flag</span> Zandvoort
+                        <span class="route-dot"></span> Overveen
+                        <span class="route-dot"></span> Haarlem
+                        <span class="route-dot"></span> Spaarne
+                        <span class="route-dot"></span> Groenendaal
+                        <span class="route-dot"></span>
+                        <span class="material-icons">flag</span> Zandvoort
                     </div>
                 </div>
             </div>
@@ -1199,8 +1468,8 @@
             <div class="praktisch-item">
                 <div class="praktisch-icon"><span class="material-icons">location_on</span></div>
                 <div>
-                    <h4>Ophaallocatie</h4>
-                    <p>Rosendaalsestraat 129, 6824 CD Arnhem</p>
+                    <h4>3 Ophaallocaties</h4>
+                    <p>Arnhem Centrum, Arnhem Apartments, Zandvoort aan Zee</p>
                 </div>
             </div>
             <div class="praktisch-item">
@@ -1350,11 +1619,12 @@
     <div class="footer-inner">
         <div class="footer-brand">
             <h3>Darosa Fietsverhuur</h3>
-            <p>Darosa Beheer B.V. — Ontdek Arnhem en de Veluwe op een Fuell Flluid e-bike. Elektrisch door de groenste stad van Nederland.</p>
+            <p>Darosa Beheer B.V. — Ontdek Arnhem, de Veluwe en Zandvoort op een Fuell Flluid e-bike. 3 verhuurlocaties in Nederland.</p>
         </div>
         <div>
             <h4>Navigatie</h4>
             <ul>
+                <li><a href="#locaties">Locaties</a></li>
                 <li><a href="#natuur">Natuur</a></li>
                 <li><a href="#fietsen">E-Bikes</a></li>
                 <li><a href="#tarieven">Tarieven</a></li>
@@ -1388,8 +1658,17 @@
             <button class="modal-close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body" id="modal-body">
-            <!-- Stap 1: Fiets & Datum -->
+            <!-- Stap 1: Locatie, Fiets & Datum -->
             <div id="stap-1">
+                <div class="form-group">
+                    <label>Waar wil je ophalen?</label>
+                    <select id="locatie-select" onchange="filterFietsenOpLocatie()">
+                        <option value="">Alle locaties</option>
+                        <option value="arnhem_centrum">Arnhem Centrum — Rosendaalsestraat 129</option>
+                        <option value="arnhem_apartments">Arnhem Apartments — 20% korting bij short-stay</option>
+                        <option value="zandvoort">Zandvoort aan Zee — 20% korting bij short-stay</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>Kies een e-bike</label>
                     <select id="fiets-select">
@@ -1474,28 +1753,68 @@
     </div>
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
     const API = '';
+
+    // ========== Locatie data ==========
+    const LOCATIE_DATA = {
+        arnhem_centrum: { naam: 'Arnhem Centrum', lat: 51.9851, lng: 5.9115 },
+        arnhem_apartments: { naam: 'Arnhem Apartments', lat: 51.9794, lng: 5.9096 },
+        zandvoort: { naam: 'Zandvoort aan Zee', lat: 52.3727, lng: 4.5330 }
+    };
+
+    const LOCATIE_LABELS = {
+        arnhem_centrum: 'Arnhem Centrum',
+        arnhem_apartments: 'Arnhem Apartments',
+        zandvoort: 'Zandvoort'
+    };
+
+    let alleFietsen = [];
 
     // ========== Fietsen laden ==========
     async function laadFietsen() {
         try {
             const res = await fetch(`${API}/api/fietsen`);
-            const fietsen = await res.json();
-            const select = document.getElementById('fiets-select');
-
-            // Vul select
-            select.innerHTML = '<option value="">Selecteer een e-bike...</option>' +
-                fietsen.filter(f => f.status === 'beschikbaar').map(f =>
-                    `<option value="${f.id}">${f.naam} ${f.notities ? '(' + f.notities + ')' : ''}</option>`
-                ).join('');
-
-            // Update beschikbaar aantal
-            const beschikbaar = fietsen.filter(f => f.status === 'beschikbaar').length;
-            const countEl = document.querySelector('.bike-count');
-            if (countEl) countEl.textContent = beschikbaar + ' beschikbaar';
+            alleFietsen = await res.json();
+            vulFietsSelect();
+            updateBeschikbaarheid();
         } catch(e) {
             console.error('Fout bij laden fietsen:', e);
+        }
+    }
+
+    function vulFietsSelect(locatie) {
+        const select = document.getElementById('fiets-select');
+        let fietsen = alleFietsen.filter(f => f.status === 'beschikbaar');
+        if (locatie) {
+            fietsen = fietsen.filter(f => f.locatie === locatie);
+        }
+        select.innerHTML = '<option value="">Selecteer een e-bike...</option>' +
+            fietsen.map(f => {
+                const loc = LOCATIE_LABELS[f.locatie] || f.locatie;
+                return `<option value="${f.id}">${f.naam} — ${loc} ${f.notities ? '(' + f.notities + ')' : ''}</option>`;
+            }).join('');
+
+        // Update totaal beschikbaar
+        const beschikbaar = alleFietsen.filter(f => f.status === 'beschikbaar').length;
+        const countEl = document.querySelector('.bike-count');
+        if (countEl) countEl.textContent = beschikbaar + ' beschikbaar';
+    }
+
+    function filterFietsenOpLocatie() {
+        const locatie = document.getElementById('locatie-select').value;
+        vulFietsSelect(locatie || null);
+    }
+
+    function updateBeschikbaarheid() {
+        // Update beschikbaar counts per locatie
+        for (const locId of Object.keys(LOCATIE_DATA)) {
+            const count = alleFietsen.filter(f => f.locatie === locId && f.status === 'beschikbaar').length;
+            const el = document.getElementById('beschikbaar-' + locId.replace(/_/g, '-'));
+            if (el) {
+                el.querySelector('span:last-child').textContent = count + ' beschikbaar';
+            }
         }
     }
 
@@ -1561,6 +1880,7 @@
         const errorEl = document.getElementById('form-error');
         errorEl.style.display = 'none';
 
+        const locatie = document.getElementById('locatie-select').value;
         const fietsId = document.getElementById('fiets-select').value;
         const ophaalDatum = document.getElementById('ophaal-datum').value;
         const inleverDatum = document.getElementById('inlever-datum').value;
@@ -1586,6 +1906,7 @@
                     fiets_id: parseInt(fietsId),
                     ophaal_datum: ophaalDatum,
                     inlever_datum: inleverDatum,
+                    ophaal_locatie: locatie || 'arnhem_centrum',
                     naam: naam,
                     email: email,
                     telefoon: telefoon,
@@ -1641,8 +1962,94 @@
         });
     });
 
+    // ========== Leaflet Kaarten ==========
+    function initMiniMaps() {
+        const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        const tileAttr = '&copy; OpenStreetMap';
+
+        // Mini-maps per locatie
+        for (const [locId, loc] of Object.entries(LOCATIE_DATA)) {
+            const mapDiv = document.getElementById('map-' + locId.replace(/_/g, '-'));
+            if (mapDiv) {
+                const miniMap = L.map(mapDiv, {
+                    zoomControl: false,
+                    dragging: false,
+                    scrollWheelZoom: false,
+                    doubleClickZoom: false,
+                    touchZoom: false,
+                    attributionControl: false
+                }).setView([loc.lat, loc.lng], 14);
+                L.tileLayer(tileUrl, { attribution: tileAttr }).addTo(miniMap);
+                L.marker([loc.lat, loc.lng]).addTo(miniMap);
+            }
+        }
+
+        // Grote overzichtskaart
+        const mainMap = L.map('locatie-kaart').setView([52.18, 5.22], 8);
+        L.tileLayer(tileUrl, { attribution: tileAttr }).addTo(mainMap);
+
+        // Markers met popups
+        const markers = [];
+        const markerData = [
+            { id: 'arnhem_centrum', popup: '<b>Arnhem Centrum</b><br>Rosendaalsestraat 129<br><em>Los huren — voor iedereen</em>' },
+            { id: 'arnhem_apartments', popup: '<b>Arnhem Apartments</b><br>Bij de Serviced Apartments<br><em>20% korting bij short-stay</em>' },
+            { id: 'zandvoort', popup: '<b>Zandvoort aan Zee</b><br>Bij het strandappartement<br><em>20% korting bij short-stay</em>' }
+        ];
+
+        for (const md of markerData) {
+            const loc = LOCATIE_DATA[md.id];
+            const marker = L.marker([loc.lat, loc.lng]).addTo(mainMap).bindPopup(md.popup);
+            markers.push(marker);
+        }
+
+        // Fit bounds om alle markers te tonen
+        const group = L.featureGroup(markers);
+        mainMap.fitBounds(group.getBounds().pad(0.3));
+
+        // Routes als gekleurde lijnen
+        // Arnhem routes (groen tinten)
+        const arnhemStad = [
+            [51.9851, 5.9115], [51.9880, 5.9100], [51.9920, 5.9050],
+            [51.9900, 5.9200], [51.9860, 5.9250], [51.9851, 5.9115]
+        ];
+        const arnhemVeluwe = [
+            [51.9851, 5.9115], [52.0000, 5.8900], [52.0200, 5.8500],
+            [52.0400, 5.8300], [52.0550, 5.8600], [52.0300, 5.8800],
+            [51.9851, 5.9115]
+        ];
+        const arnhemRivier = [
+            [51.9851, 5.9115], [51.9750, 5.9000], [51.9700, 5.8900],
+            [51.9650, 5.9200], [51.9700, 5.9500], [51.9800, 5.9300],
+            [51.9851, 5.9115]
+        ];
+
+        // Zandvoort routes (blauwe tinten)
+        const zandvoortStrand = [
+            [52.3727, 4.5330], [52.3800, 4.5250], [52.3900, 4.5200],
+            [52.3950, 4.5180], [52.3850, 4.5280], [52.3727, 4.5330]
+        ];
+        const zandvoortDuinen = [
+            [52.3727, 4.5330], [52.3800, 4.5400], [52.3900, 4.5500],
+            [52.4000, 4.5550], [52.4100, 4.5600], [52.4000, 4.5400],
+            [52.3850, 4.5350], [52.3727, 4.5330]
+        ];
+        const zandvoortHaarlem = [
+            [52.3727, 4.5330], [52.3900, 4.5500], [52.4050, 4.5700],
+            [52.3815, 4.6360], [52.3800, 4.6200], [52.3700, 4.5800],
+            [52.3727, 4.5330]
+        ];
+
+        L.polyline(arnhemStad, { color: '#2D5F2D', weight: 3, opacity: 0.7, dashArray: '8,6' }).addTo(mainMap).bindPopup('Stadsroute — 20 km');
+        L.polyline(arnhemVeluwe, { color: '#4CAF50', weight: 3, opacity: 0.7, dashArray: '8,6' }).addTo(mainMap).bindPopup('Veluwe Route — 45 km');
+        L.polyline(arnhemRivier, { color: '#8B6914', weight: 3, opacity: 0.7, dashArray: '8,6' }).addTo(mainMap).bindPopup('Rivier Route — 35 km');
+        L.polyline(zandvoortStrand, { color: '#1565C0', weight: 3, opacity: 0.7, dashArray: '8,6' }).addTo(mainMap).bindPopup('Strandroute — 15 km');
+        L.polyline(zandvoortDuinen, { color: '#0288D1', weight: 3, opacity: 0.7, dashArray: '8,6' }).addTo(mainMap).bindPopup('Duinenroute — 25 km');
+        L.polyline(zandvoortHaarlem, { color: '#7B1FA2', weight: 3, opacity: 0.7, dashArray: '8,6' }).addTo(mainMap).bindPopup('Haarlem Route — 30 km');
+    }
+
     // ========== Init ==========
     laadFietsen();
+    document.addEventListener('DOMContentLoaded', initMiniMaps);
 </script>
 
 </body>

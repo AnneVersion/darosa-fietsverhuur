@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS fietsen (
     max_snelheid INTEGER DEFAULT 45,
     status VARCHAR(20) DEFAULT 'beschikbaar', -- beschikbaar, verhuurd, onderhoud
     kenteken VARCHAR(20),
+    locatie VARCHAR(50) DEFAULT 'arnhem_centrum',
     notities TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -34,6 +35,7 @@ CREATE TABLE IF NOT EXISTS reserveringen (
     dagprijs DECIMAL(8,2) DEFAULT 25.00,
     totaal DECIMAL(8,2),
     borg DECIMAL(8,2) DEFAULT 250.00,
+    ophaal_locatie VARCHAR(50) DEFAULT 'arnhem_centrum',
     status VARCHAR(20) DEFAULT 'bevestigd', -- bevestigd, actief, afgerond, geannuleerd
     notities TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

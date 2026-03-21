@@ -117,8 +117,9 @@ def admin():
 
 @app.route('/api/fietsen', methods=['GET'])
 def get_fietsen():
-    """Lijst van alle fietsen met status."""
-    fietsen = query_db("""
+    """Lijst van alle fietsen met status, optioneel gefilterd op locatie."""
+    locatie = request.args.get('locatie')
+    sql = """
         SELECT f.*,
             (SELECT COUNT(*) FROM reserveringen r
              WHERE r.fiets_id = f.id
@@ -126,8 +127,14 @@ def get_fietsen():
              AND r.ophaal_datum <= CURRENT_DATE
              AND r.inlever_datum >= CURRENT_DATE) as actief_verhuurd
         FROM fietsen f
-        ORDER BY f.id
-    """)
+    """
+    params = []
+    if locatie:
+        sql += " WHERE f.locatie = %s"
+        params.append(locatie)
+    sql += " ORDER BY f.id"
+
+    fietsen = query_db(sql, params if params else None)
     result = []
     for f in fietsen:
         fiets = dict(f)
@@ -153,7 +160,7 @@ def update_fiets(fiets_id):
     data = request.get_json()
     updates = []
     params = []
-    for veld in ['status', 'kenteken', 'notities']:
+    for veld in ['status', 'kenteken', 'locatie', 'notities']:
         if veld in data:
             updates.append(f"{veld} = %s")
             params.append(data[veld])
@@ -170,13 +177,14 @@ def update_fiets(fiets_id):
 
 @app.route('/api/beschikbaarheid', methods=['GET'])
 def check_beschikbaarheid():
-    """Check beschikbare fietsen voor een datumbereik."""
+    """Check beschikbare fietsen voor een datumbereik, optioneel gefilterd op locatie."""
     van = request.args.get('van')
     tot = request.args.get('tot')
+    locatie = request.args.get('locatie')
     if not van or not tot:
         return jsonify({'error': 'Parameters van en tot zijn verplicht'}), 400
 
-    beschikbaar = query_db("""
+    sql = """
         SELECT f.* FROM fietsen f
         WHERE f.status != 'onderhoud'
         AND f.id NOT IN (
@@ -185,8 +193,14 @@ def check_beschikbaarheid():
             AND r.ophaal_datum < %s
             AND r.inlever_datum > %s
         )
-        ORDER BY f.id
-    """, (tot, van))
+    """
+    params = [tot, van]
+    if locatie:
+        sql += " AND f.locatie = %s"
+        params.append(locatie)
+    sql += " ORDER BY f.id"
+
+    beschikbaar = query_db(sql, params)
 
     result = []
     for f in beschikbaar:
@@ -260,8 +274,8 @@ def maak_reservering():
 
     # Reservering aanmaken
     reservering = query_db("""
-        INSERT INTO reserveringen (reservering_nr, fiets_id, klant_id, ophaal_datum, inlever_datum, dagprijs, totaal, borg, status, notities)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'bevestigd', %s)
+        INSERT INTO reserveringen (reservering_nr, fiets_id, klant_id, ophaal_datum, inlever_datum, dagprijs, totaal, borg, ophaal_locatie, status, notities)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 'bevestigd', %s)
         RETURNING id, reservering_nr, totaal, borg
     """, (
         reservering_nr,
@@ -272,6 +286,7 @@ def maak_reservering():
         prijs['dagprijs'],
         prijs['totaal'],
         250.00,
+        data.get('ophaal_locatie', 'arnhem_centrum'),
         data.get('notities')
     ), fetchone=True)
 
@@ -358,6 +373,62 @@ def get_klanten():
         klant = dict(k)
         klant['created_at'] = klant['created_at'].isoformat() if klant['created_at'] else None
         result.append(klant)
+    return jsonify(result)
+
+
+# ============================================================
+# API: Locaties
+# ============================================================
+
+LOCATIES = {
+    'arnhem_centrum': {
+        'id': 'arnhem_centrum',
+        'naam': 'Arnhem Centrum',
+        'type': 'Los huren',
+        'adres': 'Rosendaalsestraat 129, 6824 CD Arnhem',
+        'lat': 51.9851,
+        'lng': 5.9115,
+        'beschrijving': 'Voor iedereen — toeristen, forensen, locals',
+        'highlights': 'Nabij: Veluwe, Sonsbeek, centrum',
+        'korting': None
+    },
+    'arnhem_apartments': {
+        'id': 'arnhem_apartments',
+        'naam': 'Arnhem Apartments',
+        'type': 'Bij short-stay',
+        'adres': 'Bij de Serviced Apartments',
+        'lat': 51.9794,
+        'lng': 5.9096,
+        'beschrijving': '20% korting voor appartement huurders',
+        'highlights': 'Bij de Serviced Apartments studio\'s',
+        'korting': 20
+    },
+    'zandvoort': {
+        'id': 'zandvoort',
+        'naam': 'Zandvoort aan Zee',
+        'type': 'Bij short-stay',
+        'adres': 'Bij het strandappartement, Zandvoort',
+        'lat': 52.3727,
+        'lng': 4.5330,
+        'beschrijving': 'Fietsen langs de kust, duinen, strand',
+        'highlights': '20% korting voor appartement huurders',
+        'korting': 20
+    }
+}
+
+
+@app.route('/api/locaties', methods=['GET'])
+def get_locaties():
+    """Lijst van alle verhuurlocaties met beschikbare fietsen."""
+    result = []
+    for loc_id, loc in LOCATIES.items():
+        beschikbaar = query_db(
+            "SELECT COUNT(*) as count FROM fietsen WHERE locatie = %s AND status = 'beschikbaar'",
+            (loc_id,), fetchone=True
+        )
+        loc_data = dict(loc)
+        loc_data['beschikbaar'] = beschikbaar['count'] if beschikbaar else 0
+        result.append(loc_data)
     return jsonify(result)
 
 
