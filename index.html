@@ -1107,8 +1107,7 @@
                     </div>
                     <p>Voor iedereen — toeristen, forensen, locals. Nabij de Veluwe, Sonsbeek en het centrum.</p>
                     <div class="locatie-beschikbaar" id="beschikbaar-arnhem-centrum">
-                        <span class="material-icons">electric_moped</span>
-                        <span>3 beschikbaar</span>
+                        <span>3 fietsen</span>
                     </div>
                 </div>
             </div>
@@ -1124,8 +1123,7 @@
                     </div>
                     <p>Exclusief voor appartement huurders. Fiets direct vanaf je verblijf de natuur in.</p>
                     <div class="locatie-beschikbaar" id="beschikbaar-arnhem-apartments">
-                        <span class="material-icons">electric_moped</span>
-                        <span>1 beschikbaar</span>
+                        <span>1 fiets</span>
                     </div>
                     <a href="http://localhost:8088" class="locatie-link">
                         <span class="material-icons" style="font-size:14px">apartment</span>
@@ -1145,8 +1143,7 @@
                     </div>
                     <p>Fietsen langs de kust, door de duinen en over het strand. Ontdek de Kennemerduinen en Haarlem.</p>
                     <div class="locatie-beschikbaar" id="beschikbaar-zandvoort">
-                        <span class="material-icons">electric_moped</span>
-                        <span>1 beschikbaar</span>
+                        <span>1 fiets</span>
                     </div>
                     <a href="http://localhost:8088" class="locatie-link">
                         <span class="material-icons" style="font-size:14px">apartment</span>
@@ -1970,7 +1967,7 @@
             const count = alleFietsen.filter(f => f.locatie === locId && f.status === 'beschikbaar').length;
             const el = document.getElementById('beschikbaar-' + locId.replace(/_/g, '-'));
             if (el) {
-                el.querySelector('span:last-child').textContent = count + ' beschikbaar';
+                el.querySelector('span:last-child').textContent = count + (count === 1 ? ' fiets' : ' fietsen');
             }
         }
     }
