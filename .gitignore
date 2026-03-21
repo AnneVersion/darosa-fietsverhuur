@@ -11,4 +11,5 @@ build/
 Thumbs.db
 *.log
 img/*.jpg
+img/*.jpeg
 optimize_images.py
